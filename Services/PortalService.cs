@@ -102,4 +102,18 @@ public class PortalService
             ? _posts.OrderBy(p => p.Id).ToList()
             : _posts.OrderByDescending(p => p.Id).ToList();
     }
+    public void ReplaceAll(List<Post> newPosts)
+    {
+      
+        newPosts ??= new List<Post>();
+
+   
+        _posts.Clear();
+
+    
+        _posts.AddRange(newPosts);
+
+
+        _nextId = _posts.Count == 0 ? 1 : _posts.Max(p => p.Id) + 1;
+    }
 }
