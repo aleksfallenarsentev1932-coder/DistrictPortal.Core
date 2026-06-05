@@ -77,4 +77,29 @@ public class PortalService
         var post = GetExisting(id);
         _posts.Remove(post);
     }
+    public List<Post> SearchByTitle(string query)
+    {
+        query ??= "";
+        query = query.Trim();
+        if (query.Length == 0) return GetAllPosts();
+
+        return _posts
+            .Where(p => (p.Title ?? "").Contains(query, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+    }
+
+
+    public List<Post> FilterByCategory(PostCategory? category)
+    {
+        if (category is null) return GetAllPosts(); 
+        return _posts.Where(p => p.Category == category).ToList();
+    }
+
+
+    public List<Post> SortById(bool ascending = true)
+    {
+        return ascending
+            ? _posts.OrderBy(p => p.Id).ToList()
+            : _posts.OrderByDescending(p => p.Id).ToList();
+    }
 }
