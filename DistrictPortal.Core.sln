@@ -10,6 +10,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{36D591C7-65C7-A0D1-1CBC-10CDE441BDC8}"
 	ProjectSection(SolutionItems) = preProject
 		LR2_Report.md = LR2_Report.md
+		LR3_Report.md = LR3_Report.md
+		LR4_Report.md = LR4_Report.md
+		LR5_Report.md = LR5_Report.md
+		LR6_Report.md = LR6_Report.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DistrictPortal.Storage", "..\DistrictPortal.Storage\DistrictPortal.Storage.csproj", "{5B743780-D251-4F30-BA99-E1063729054C}"
