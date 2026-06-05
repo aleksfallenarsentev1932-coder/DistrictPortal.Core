@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36518.9 d17.14
+VisualStudioVersion = 17.14.36518.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DistrictPortal.Core", "DistrictPortal.Core.csproj", "{7A7C9088-47EC-4E88-AE75-71B873D9C5EC}"
 EndProject
@@ -11,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{36D591C7-6
 	ProjectSection(SolutionItems) = preProject
 		LR2_Report.md = LR2_Report.md
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DistrictPortal.Storage", "..\DistrictPortal.Storage\DistrictPortal.Storage.csproj", "{5B743780-D251-4F30-BA99-E1063729054C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,6 +28,10 @@ Global
 		{4D20BDB6-FF0E-46D2-A9DC-6056B86F5BAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4D20BDB6-FF0E-46D2-A9DC-6056B86F5BAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4D20BDB6-FF0E-46D2-A9DC-6056B86F5BAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B743780-D251-4F30-BA99-E1063729054C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B743780-D251-4F30-BA99-E1063729054C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B743780-D251-4F30-BA99-E1063729054C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B743780-D251-4F30-BA99-E1063729054C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
