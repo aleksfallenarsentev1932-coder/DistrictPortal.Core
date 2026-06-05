@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using DistrictPortal.Core.Models;
-using DistrictPortal.Core.Services; 
+using DistrictPortal.Core.Services;
+using DistrictPortal.Core.Reports;
 
 namespace DistrictPortal.Core.Services;
 
@@ -98,5 +99,17 @@ public class PortalService
         _posts.Clear();
         _posts.AddRange(newPosts);
         _nextId = _posts.Count == 0 ? 1 : _posts.Max(p => p.Id) + 1;
+    }
+    public TaskStats GetStats()
+    {
+        var stats = new TaskStats();
+        stats.Total = _posts.Count;
+        foreach (var p in _posts)
+        {
+            if (p.Category == PostCategory.News) stats.NewCount++;
+            else if (p.Category == PostCategory.Services) stats.InProgressCount++;
+            else stats.DoneCount++;
+        }
+        return stats;
     }
 }
