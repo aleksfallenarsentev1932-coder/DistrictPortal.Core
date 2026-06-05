@@ -10,8 +10,17 @@ namespace DistrictPortal.Core.Services;
 
 public class PortalService
 {
-    private readonly List<Post> _posts = new();
-    private int _nextId = 1;
+    private readonly List<Post> _posts;
+    private int _nextId;
+
+
+    public PortalService(List<Post>? initialPosts = null)
+    {
+        _posts = initialPosts ?? new List<Post>();
+
+  
+        _nextId = _posts.Count == 0 ? 1 : _posts.Max(p => p.Id) + 1;
+    }
 
 
     public Post AddPost(string title, string description, PostCategory category)
