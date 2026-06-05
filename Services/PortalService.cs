@@ -36,6 +36,28 @@ public class PortalService
 
     public List<Post> GetAllPosts()
     {
-        return _posts.ToList(); 
+        return _posts.ToList();
+    }
+
+
+    private Post GetExisting(int id)
+    {
+        var post = _posts.FirstOrDefault(p => p.Id == id);
+        if (post is null)
+            throw new ArgumentException($"Объявление с Id={id} не найдено.");
+        return post;
+    }
+
+    public Post ChangeCategory(int id, PostCategory newCategory)
+    {
+        var post = GetExisting(id);
+        post.Category = newCategory;
+        return post;
+    }
+
+    public void Delete(int id)
+    {
+        var post = GetExisting(id);
+        _posts.Remove(post);
     }
 }
