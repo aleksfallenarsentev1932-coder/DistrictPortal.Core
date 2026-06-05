@@ -13,15 +13,11 @@ public class PortalService
     private readonly List<Post> _posts;
     private int _nextId;
 
-
     public PortalService(List<Post>? initialPosts = null)
     {
         _posts = initialPosts ?? new List<Post>();
-
-  
         _nextId = _posts.Count == 0 ? 1 : _posts.Max(p => p.Id) + 1;
     }
-
 
     public Post AddPost(string title, string description, PostCategory category)
     {
@@ -43,11 +39,23 @@ public class PortalService
         return post;
     }
 
+
+    public void UpdatePost(int id, string title, string description)
+    {
+        var post = GetExisting(id);
+
+        if (string.IsNullOrWhiteSpace(title))
+            throw new ArgumentException("Заголовок не может быть пустым.");
+
+        post.Title = title.Trim();
+        post.Description = description.Trim();
+    }
+
+
     public List<Post> GetAllPosts()
     {
         return _posts.ToList();
     }
-
 
     private Post GetExisting(int id)
     {
