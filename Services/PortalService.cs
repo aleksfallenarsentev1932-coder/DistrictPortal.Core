@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using DistrictPortal.Core.Models;
+using DistrictPortal.Core.Services; 
 
 namespace DistrictPortal.Core.Services;
 
@@ -19,13 +17,10 @@ public class PortalService
         _nextId = _posts.Count == 0 ? 1 : _posts.Max(p => p.Id) + 1;
     }
 
+
     public Post AddPost(string title, string description, PostCategory category)
     {
-        if (string.IsNullOrWhiteSpace(title))
-            throw new ArgumentException("Заголовок объявления не может быть пустым.");
-
-        if (string.IsNullOrWhiteSpace(description))
-            throw new ArgumentException("Описание объявления не может быть пустым.");
+        TaskValidator.Validate(title, description);
 
         var post = new Post
         {
@@ -34,23 +29,18 @@ public class PortalService
             Description = description.Trim(),
             Category = category
         };
-
         _posts.Add(post);
         return post;
     }
 
-
     public void UpdatePost(int id, string title, string description)
     {
+        TaskValidator.Validate(title, description); 
+
         var post = GetExisting(id);
-
-        if (string.IsNullOrWhiteSpace(title))
-            throw new ArgumentException("Заголовок не может быть пустым.");
-
         post.Title = title.Trim();
         post.Description = description.Trim();
     }
-
 
     public List<Post> GetAllPosts()
     {
@@ -77,6 +67,7 @@ public class PortalService
         var post = GetExisting(id);
         _posts.Remove(post);
     }
+
     public List<Post> SearchByTitle(string query)
     {
         query ??= "";
@@ -88,13 +79,11 @@ public class PortalService
             .ToList();
     }
 
-
     public List<Post> FilterByCategory(PostCategory? category)
     {
-        if (category is null) return GetAllPosts(); 
+        if (category is null) return GetAllPosts();
         return _posts.Where(p => p.Category == category).ToList();
     }
-
 
     public List<Post> SortById(bool ascending = true)
     {
@@ -102,18 +91,12 @@ public class PortalService
             ? _posts.OrderBy(p => p.Id).ToList()
             : _posts.OrderByDescending(p => p.Id).ToList();
     }
+
     public void ReplaceAll(List<Post> newPosts)
     {
-      
         newPosts ??= new List<Post>();
-
-   
         _posts.Clear();
-
-    
         _posts.AddRange(newPosts);
-
-
         _nextId = _posts.Count == 0 ? 1 : _posts.Max(p => p.Id) + 1;
     }
 }
