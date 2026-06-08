@@ -1,0 +1,15 @@
+C:\Users\леша\source\repos\DistrictPortal\DistrictPortal.Storage\bin\Debug\net8.0\DistrictPortal.Storage.deps.json
+C:\Users\леша\source\repos\DistrictPortal\DistrictPortal.Storage\bin\Debug\net8.0\DistrictPortal.Storage.dll
+C:\Users\леша\source\repos\DistrictPortal\DistrictPortal.Storage\bin\Debug\net8.0\DistrictPortal.Storage.pdb
+C:\Users\леша\source\repos\DistrictPortal\DistrictPortal.Storage\bin\Debug\net8.0\DistrictPortal.Core.dll
+C:\Users\леша\source\repos\DistrictPortal\DistrictPortal.Storage\bin\Debug\net8.0\DistrictPortal.Core.pdb
+C:\Users\леша\source\repos\DistrictPortal\DistrictPortal.Storage\obj\Debug\net8.0\DistrictPortal.Storage.csproj.AssemblyReference.cache
+C:\Users\леша\source\repos\DistrictPortal\DistrictPortal.Storage\obj\Debug\net8.0\DistrictPortal.Storage.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\леша\source\repos\DistrictPortal\DistrictPortal.Storage\obj\Debug\net8.0\DistrictPortal.Storage.AssemblyInfoInputs.cache
+C:\Users\леша\source\repos\DistrictPortal\DistrictPortal.Storage\obj\Debug\net8.0\DistrictPortal.Storage.AssemblyInfo.cs
+C:\Users\леша\source\repos\DistrictPortal\DistrictPortal.Storage\obj\Debug\net8.0\DistrictPortal.Storage.csproj.CoreCompileInputs.cache
+C:\Users\леша\source\repos\DistrictPortal\DistrictPortal.Storage\obj\Debug\net8.0\District.275C5A3E.Up2Date
+C:\Users\леша\source\repos\DistrictPortal\DistrictPortal.Storage\obj\Debug\net8.0\DistrictPortal.Storage.dll
+C:\Users\леша\source\repos\DistrictPortal\DistrictPortal.Storage\obj\Debug\net8.0\refint\DistrictPortal.Storage.dll
+C:\Users\леша\source\repos\DistrictPortal\DistrictPortal.Storage\obj\Debug\net8.0\DistrictPortal.Storage.pdb
+C:\Users\леша\source\repos\DistrictPortal\DistrictPortal.Storage\obj\Debug\net8.0\ref\DistrictPortal.Storage.dll
