@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DistrictPortal.App")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9406591700c4819b7472076c1765e741c5f97b05")]
 [assembly: System.Reflection.AssemblyProductAttribute("DistrictPortal.App")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DistrictPortal.App")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

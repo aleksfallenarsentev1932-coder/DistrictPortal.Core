@@ -1,0 +1,341 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Соседский Портал</title>
+    <style>
+        :root {
+            --bg-color: #121214;
+            --card-bg: #1a1a1e;
+            --accent-color: #3b82f6;
+            --danger-color: #ef4444;
+            --success-color: #10b981;
+            --text-color: #e4e4e7;
+            --text-muted: #a1a1aa;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #fff;
+            margin-bottom: 5px;
+        }
+
+        .container {
+            display: flex;
+            gap: 30px;
+            max-width: 1200px;
+            width: 100%;
+            align-items: flex-start;
+        }
+
+        .form-section {
+            background-color: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            width: 320px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            background-color: #27272a;
+            border: 1px solid #3f3f46;
+            border-radius: 6px;
+            color: #fff;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+
+            input:focus, textarea:focus {
+                outline: none;
+                border-color: var(--accent-color);
+            }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--accent-color);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+            button:hover {
+                background-color: #2563eb;
+            }
+
+            button.cancel-btn {
+                background-color: #3f3f46;
+                margin-top: 8px;
+            }
+
+                button.cancel-btn:hover {
+                    background-color: #52525b;
+                }
+
+        .feed-section {
+            flex-grow: 1;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .post-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .post-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0 0 10px 0;
+            color: #fff;
+        }
+
+        .post-content {
+            font-size: 14px;
+            color: var(--text-color);
+            line-height: 1.5;
+            margin-bottom: 15px;
+            flex-grow: 1;
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: normal;
+        }
+
+        .edit-btn {
+            background-color: #52525b;
+        }
+
+            .edit-btn:hover {
+                background-color: #71717a;
+            }
+
+        .delete-btn {
+            background-color: var(--danger-color);
+        }
+
+            .delete-btn:hover {
+                background-color: #dc2626;
+            }
+
+        .post-footer {
+            font-size: 12px;
+            color: var(--text-muted);
+            border-top: 1px solid #27272a;
+            padding-top: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Соседский Портал</h1>
+        <p style="color: var(--text-muted); margin: 0;">Объявления и новости нашего района</p>
+    </header>
+
+    <div class="container">
+        <div class="form-section">
+            <h3 id="formTitle" style="margin-top: 0; margin-bottom: 20px;">Создать объявление</h3>
+            <form id="postForm">
+                <div class="form-group">
+                    <label for="title">Заголовок</label>
+                    <input type="text" id="title" required placeholder="Например: Потерялся кот">
+                </div>
+                <div class="form-group">
+                    <label for="content">Текст объявления</label>
+                    <textarea id="content" rows="5" required placeholder="Описание объявления..."></textarea>
+                </div>
+                <button type="submit" id="submitBtn">Опубликовать</button>
+                <button type="button" id="cancelEditBtn" class="cancel-btn" style="display: none;">Отмена</button>
+            </form>
+        </div>
+
+        <div class="feed-section" id="feed"></div>
+    </div>
+
+    <script>
+        const API_URL = '/api/posts';
+        let editingPostId = null; // Хранит ID редактируемого поста, если режим включен
+
+        // 1. ЗАГРУЗКА И СБОРКА ЛЕНТЫ
+        async function loadPosts() {
+            try {
+                const response = await fetch(API_URL);
+                if (!response.ok) throw new Error('Ошибка при загрузке');
+
+                const posts = await response.json();
+                const feed = document.getElementById('feed');
+                feed.innerHTML = '';
+
+                if (!posts || posts.length === 0) {
+                    feed.innerHTML = '<p style="color: var(--text-muted)">Объявлений пока нет.</p>';
+                    return;
+                }
+
+                posts.forEach(post => {
+                    const card = document.createElement('div');
+                    card.className = 'post-card';
+
+                    const postText = post.text || post.content || post.description || 'Текст отсутствует';
+
+                    card.innerHTML = `
+                            <div>
+                                <div class="post-title">${post.title || 'Без названия'}</div>
+                                <div class="post-content">${postText}</div>
+                            </div>
+                            <div>
+                                <div class="post-actions">
+                                    <button class="action-btn edit-btn" onclick="startEdit(${post.id}, '${escapeHtml(post.title)}', '${escapeHtml(postText)}')">Редактировать</button>
+                                    <button class="action-btn delete-btn" onclick="deletePost(${post.id})">Удалить</button>
+                                </div>
+                                <div class="post-footer">
+                                    <span>ID: ${post.id || 0}</span>
+                                </div>
+                            </div>
+                        `;
+                    feed.appendChild(card);
+                });
+            } catch (error) {
+                console.error('Ошибка:', error);
+                document.getElementById('feed').innerHTML = '<p style="color: #ef4444">Не удалось загрузить ленту.</p>';
+            }
+        }
+
+        // 2. ОТПРАВКА ИЛИ ИЗМЕНЕНИЕ ФОРМЫ
+        document.getElementById('postForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const titleInput = document.getElementById('title');
+            const contentInput = document.getElementById('content');
+
+            const dataToSend = {
+                title: titleInput.value,
+                content: contentInput.value,
+                text: contentInput.value,
+                description: contentInput.value
+            };
+
+            // Если editingPostId не равен null, шлем PUT запрос на изменение, иначе POST на создание
+            const isEditing = editingPostId !== null;
+            const url = isEditing ? `${API_URL}/${editingPostId}` : API_URL;
+            const method = isEditing ? 'PUT' : 'POST';
+
+            try {
+                const response = await fetch(url, {
+                    method: method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dataToSend)
+                });
+
+                if (response.ok) {
+                    resetForm();
+                    await loadPosts();
+                } else {
+                    const errorText = await response.text();
+                    alert("Ошибка сервера: " + errorText);
+                }
+            } catch (error) {
+                console.error(error);
+                alert('Не удалось выполнить запрос.');
+            }
+        });
+
+        // 3. УДАЛЕНИЕ ПОСТА
+        async function deletePost(id) {
+            if (!confirm('Вы уверены, что хотите удалить это объявление?')) return;
+
+            try {
+                const response = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+                if (response.ok) {
+                    if (editingPostId === id) resetForm();
+                    await loadPosts();
+                } else {
+                    alert('Не удалось удалить объявление.');
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        // 4. ПЕРЕКЛЮЧЕНИЕ В РЕЖИМ РЕДАКТИРОВАНИЯ
+        function startEdit(id, title, text) {
+            editingPostId = id;
+            document.getElementById('title').value = title;
+            document.getElementById('content').value = text;
+
+            document.getElementById('formTitle').innerText = 'Редактировать объявление';
+            document.getElementById('submitBtn').innerText = 'Сохранить изменения';
+            document.getElementById('cancelEditBtn').style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Сброс формы в стандартный режим создания
+        function resetForm() {
+            editingPostId = null;
+            document.getElementById('title').value = '';
+            document.getElementById('content').value = '';
+            document.getElementById('formTitle').innerText = 'Создать объявление';
+            document.getElementById('submitBtn').innerText = 'Опубликовать';
+            document.getElementById('cancelEditBtn').style.display = 'none';
+        }
+
+        document.getElementById('cancelEditBtn').addEventListener('click', resetForm);
+
+        // Утилита для безопасного вывода строк в HTML аргументах функций
+        function escapeHtml(str) {
+            return str.replace(/'/g, "\\'").replace(/"/g, "&quot;").replace(/\n/g, " ");
+        }
+
+        loadPosts();
+    </script>
+</body>
+</html>

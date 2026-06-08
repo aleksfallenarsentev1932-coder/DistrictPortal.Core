@@ -1,8 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "OHxGOSndgoA=",
+  "dgSpecHash": "7cK0pPJvrzA=",
   "success": true,
-  "projectFilePath": "C:\\Users\\леша\\source\\repos\\DistrictPortal\\DistrictPortal.Storage\\DistrictPortal.Storage.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "C:\\Users\\user\\source\\repos\\DistrictPortal.Core\\DistrictPortal.Storage\\DistrictPortal.Storage.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\user\\.nuget\\packages\\firebasedatabase.net\\5.0.0\\firebasedatabase.net.5.0.0.nupkg.sha512",
+    "C:\\Users\\user\\.nuget\\packages\\litedb\\5.0.17\\litedb.5.0.17.nupkg.sha512",
+    "C:\\Users\\user\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
+    "C:\\Users\\user\\.nuget\\packages\\system.reactive\\6.0.0\\system.reactive.6.0.0.nupkg.sha512"
+  ],
   "logs": []
 }
