@@ -19,7 +19,6 @@ namespace DistrictPortal.App.Controllers
             _firebaseStorage = firebaseStorage;
         }
 
-        // GET: api/posts — Получение всех постов
         [HttpGet]
         public async Task<IActionResult> GetAllPosts()
         {
@@ -34,19 +33,31 @@ namespace DistrictPortal.App.Controllers
             }
         }
 
-        // POST: api/posts — Создание нового поста
         [HttpPost]
-        public async Task<IActionResult> CreatePost([FromBody] Post newPost)
+        public async Task<IActionResult> CreatePost([FromBody] PostDetailDto dto)
         {
-            if (newPost == null)
+            if (dto == null || string.IsNullOrEmpty(dto.Title))
             {
-                return BadRequest(new { error = "Не удалось десериализовать данные формы." });
+                return BadRequest(new { error = "Заголовок не может быть пустым." });
             }
 
             try
             {
                 var currentPosts = await _firebaseStorage.LoadAsync() ?? new List<Post>();
-                newPost.Id = Math.Abs(Guid.NewGuid().GetHashCode());
+
+                var newPost = new Post
+                {
+                    Id = Math.Abs(Guid.NewGuid().GetHashCode()),
+                    Title = dto.Title
+                };
+
+                var textProperty = typeof(Post).GetProperties()
+                    .FirstOrDefault(p => p.Name == "Text" || p.Name == "Content" || p.Name == "Description");
+
+                if (textProperty != null)
+                {
+                    textProperty.SetValue(newPost, dto.Content);
+                }
 
                 currentPosts.Add(newPost);
                 await _firebaseStorage.SaveAllAsync(currentPosts);
@@ -59,69 +70,50 @@ namespace DistrictPortal.App.Controllers
             }
         }
 
-        // PUT: api/posts/{id} — Редактирование существующего поста
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdatePost(int id, [FromBody] Post updatedPost)
+        [HttpPost("{id:int}/comments")]
+        public async Task<IActionResult> AddComment(int id, [FromBody] CommentDto comment)
         {
-            if (updatedPost == null) return BadRequest(new { error = "Данные для обновления не указаны." });
+            if (comment == null || string.IsNullOrEmpty(comment.Text))
+                return BadRequest(new { error = "Текст комментария пуст." });
 
-            try
-            {
-                var currentPosts = await _firebaseStorage.LoadAsync() ?? new List<Post>();
-                var existingPost = currentPosts.FirstOrDefault(p => p.Id == id);
-
-                if (existingPost == null)
-                {
-                    return NotFound(new { error = $"Пост с ID {id} не найден." });
-                }
-
-                // Обновляем поля (на всякий случай проверяем и Title, и текстовые поля)
-                existingPost.Title = updatedPost.Title;
-
-                // Динамически ищем, какое поле используется в твоей C# модели
-                var textProperty = typeof(Post).GetProperties().FirstOrDefault(p => p.Name == "Text" || p.Name == "Content" || p.Name == "Description");
-                if (textProperty != null)
-                {
-                    var newValue = typeof(Post).GetProperties()
-                        .Where(p => p.Name == "Text" || p.Name == "Content" || p.Name == "Description")
-                        .Select(p => p.GetValue(updatedPost))
-                        .FirstOrDefault(v => v != null && !string.IsNullOrEmpty(v.ToString()));
-
-                    if (newValue != null) textProperty.SetValue(existingPost, newValue.ToString());
-                }
-
-                await _firebaseStorage.SaveAllAsync(currentPosts);
-                return Ok(existingPost);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { error = $"Ошибка при изменении: {ex.Message}" });
-            }
+            return Ok(new { author = comment.Author ?? "Сосед", text = comment.Text, date = DateTime.Now.ToString("dd.MM.yyyy HH:mm") });
         }
 
-        // DELETE: api/posts/{id} — Удаление поста
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeletePost(int id)
         {
             try
             {
                 var currentPosts = await _firebaseStorage.LoadAsync() ?? new List<Post>();
-                var postToDelete = currentPosts.FirstOrDefault(p => p.Id == id);
+                var target = currentPosts.FirstOrDefault(p => p.Id == id);
 
-                if (postToDelete == null)
+                if (target == null)
                 {
-                    return NotFound(new { error = $"Пост с ID {id} не найден." });
+                    return NotFound(new { error = "Пост не найден." });
                 }
 
-                currentPosts.Remove(postToDelete);
+                currentPosts.Remove(target);
                 await _firebaseStorage.SaveAllAsync(currentPosts);
 
-                return Ok(new { message = "Пост успешно удален." });
+                return Ok(new { message = "Успешно удалено" });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { error = $"Ошибка при удалении: {ex.Message}" });
+                return BadRequest(new { error = ex.Message });
             }
         }
+    }
+
+    public class PostDetailDto
+    {
+        public string Title { get; set; } = string.Empty;
+        public string Content { get; set; } = string.Empty;
+        public string Category { get; set; } = string.Empty;
+    }
+
+    public class CommentDto
+    {
+        public string Author { get; set; } = string.Empty;
+        public string Text { get; set; } = string.Empty;
     }
 }

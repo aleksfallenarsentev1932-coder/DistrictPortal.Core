@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Соседский Портал</title>
+    <title>Районный Портал Взаимопомощи</title>
     <style>
         :root {
-            --bg-color: #121214;
-            --card-bg: #1a1a1e;
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
             --accent-color: #3b82f6;
-            --danger-color: #ef4444;
-            --success-color: #10b981;
-            --text-color: #e4e4e7;
-            --text-muted: #a1a1aa;
+            --danger-color: #f43f5e;
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+            --input-bg: #334155;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
@@ -27,176 +27,284 @@
         }
 
         header {
-            margin-bottom: 30px;
-            text-align: center;
-        }
-
-        h1 {
-            color: #fff;
-            margin-bottom: 5px;
-        }
-
-        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin-bottom: 25px;
             display: flex;
-            gap: 30px;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 20px;
+        }
+
+        .search-bar {
+            width: 300px;
+            position: relative;
+        }
+
+            .search-bar input {
+                width: 100%;
+                padding: 10px 15px;
+                background-color: var(--card-bg);
+                border: 1px solid #334155;
+                border-radius: 8px;
+                color: #fff;
+                box-sizing: border-box;
+            }
+
+        .main-layout {
+            display: flex;
+            gap: 25px;
             max-width: 1200px;
             width: 100%;
             align-items: flex-start;
         }
 
-        .form-section {
-            background-color: var(--card-bg);
-            padding: 25px;
-            border-radius: 12px;
-            width: 320px;
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 300px;
             flex-shrink: 0;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
 
+        .panel {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+            .panel h3 {
+                margin-top: 0;
+                margin-bottom: 15px;
+                font-size: 16px;
+                border-bottom: 1px solid #334155;
+                padding-bottom: 8px;
+            }
+
+        .categories-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .tag-btn {
+            background-color: var(--card-bg);
+            color: var(--text-muted);
+            border: 1px solid #334155;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+            .tag-btn.active, .tag-btn:hover {
+                background-color: var(--accent-color);
+                color: #fff;
+                border-color: var(--accent-color);
+            }
+
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
 
         label {
             display: block;
-            margin-bottom: 5px;
-            font-size: 14px;
+            margin-bottom: 4px;
+            font-size: 13px;
             color: var(--text-muted);
         }
 
-        input, textarea {
+        input, textarea, select {
             width: 100%;
             padding: 10px;
-            background-color: #27272a;
-            border: 1px solid #3f3f46;
+            background-color: var(--input-bg);
+            border: 1px solid #475569;
             border-radius: 6px;
             color: #fff;
             box-sizing: border-box;
-            font-family: inherit;
         }
 
-            input:focus, textarea:focus {
-                outline: none;
-                border-color: var(--accent-color);
-            }
-
-        button {
+        button.primary-btn {
             width: 100%;
-            padding: 12px;
+            padding: 10px;
             background-color: var(--accent-color);
             color: #fff;
             border: none;
             border-radius: 6px;
             font-weight: bold;
             cursor: pointer;
-            transition: background 0.2s;
         }
 
-            button:hover {
-                background-color: #2563eb;
-            }
+        .profile-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 10px;
+        }
 
-            button.cancel-btn {
-                background-color: #3f3f46;
-                margin-top: 8px;
-            }
-
-                button.cancel-btn:hover {
-                    background-color: #52525b;
-                }
+        .skill-badge {
+            background-color: #475569;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
 
         .feed-section {
             flex-grow: 1;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
 
         .post-card {
             background-color: var(--card-bg);
             border-radius: 12px;
             padding: 20px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .post-header {
             display: flex;
-            flex-direction: column;
             justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .post-category {
+            background-color: #334155;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: var(--accent-color);
+            font-weight: bold;
         }
 
         .post-title {
             font-size: 18px;
             font-weight: bold;
-            margin: 0 0 10px 0;
-            color: #fff;
+            margin: 8px 0;
         }
 
         .post-content {
             font-size: 14px;
-            color: var(--text-color);
-            line-height: 1.5;
-            margin-bottom: 15px;
-            flex-grow: 1;
-        }
-
-        .post-actions {
-            display: flex;
-            gap: 10px;
+            color: #cbd5e1;
             margin-bottom: 15px;
         }
 
-        .action-btn {
-            padding: 6px 12px;
-            font-size: 12px;
-            font-weight: normal;
+        .comments-section {
+            border-top: 1px solid #334155;
+            padding-top: 12px;
+            margin-top: 15px;
         }
 
-        .edit-btn {
-            background-color: #52525b;
+        .comment {
+            background-color: #1e293b;
+            border-left: 3px solid var(--accent-color);
+            padding: 6px 10px;
+            margin-bottom: 8px;
+            border-radius: 0 6px 6px 0;
+            font-size: 13px;
         }
 
-            .edit-btn:hover {
-                background-color: #71717a;
-            }
-
-        .delete-btn {
-            background-color: var(--danger-color);
+        .comment-author {
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 2px;
         }
 
-            .delete-btn:hover {
-                background-color: #dc2626;
-            }
-
-        .post-footer {
-            font-size: 12px;
-            color: var(--text-muted);
-            border-top: 1px solid #27272a;
-            padding-top: 10px;
+        .comment-form {
             display: flex;
-            justify-content: space-between;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+            .comment-form input {
+                flex-grow: 1;
+                padding: 6px 10px;
+                font-size: 13px;
+            }
+
+            .comment-form button {
+                padding: 6px 12px;
+                background-color: #475569;
+                border: none;
+                color: #fff;
+                border-radius: 6px;
+                cursor: pointer;
+                font-size: 13px;
+            }
+
+        .del-btn {
+            background: none;
+            border: none;
+            color: var(--danger-color);
+            cursor: pointer;
+            font-size: 13px;
         }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>Соседский Портал</h1>
-        <p style="color: var(--text-muted); margin: 0;">Объявления и новости нашего района</p>
+        <div>
+            <h1 style="margin: 0; font-size: 24px;">Районный Портал</h1>
+            <p style="color: var(--text-muted); margin: 3px 0 0 0; font-size: 14px;">Взаимопомощь, услуги и общение</p>
+        </div>
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Поиск объявлений..." oninput="filterPosts()">
+        </div>
     </header>
 
-    <div class="container">
-        <div class="form-section">
-            <h3 id="formTitle" style="margin-top: 0; margin-bottom: 20px;">Создать объявление</h3>
-            <form id="postForm">
+    <div class="categories-tags">
+        <button class="tag-btn active" onclick="selectCategory('Все', this)">Все объявления</button>
+        <button class="tag-btn" onclick="selectCategory('Быт', this)">Бытовые вопросы</button>
+        <button class="tag-btn" onclick="selectCategory('Помощь', this)">Помощь соседям</button>
+        <button class="tag-btn" onclick="selectCategory('Услуги', this)">Услуги / Работа</button>
+        <button class="tag-btn" onclick="selectCategory('Спорт', this)">Спорт / Досуг</button>
+    </div>
+
+    <div class="main-layout">
+        <div class="sidebar">
+            <div class="panel">
+                <h3>Мой профиль помощи</h3>
                 <div class="form-group">
-                    <label for="title">Заголовок</label>
-                    <input type="text" id="title" required placeholder="Например: Потерялся кот">
+                    <label>Имя соседа</label>
+                    <input type="text" id="profileName" value="София И." onchange="saveProfile()">
                 </div>
                 <div class="form-group">
-                    <label for="content">Текст объявления</label>
-                    <textarea id="content" rows="5" required placeholder="Описание объявления..."></textarea>
+                    <label>Мои навыки (через запятую)</label>
+                    <input type="text" id="profileSkills" value="Разработка сайтов, C#, Базы данных" onchange="saveProfile()">
                 </div>
-                <button type="submit" id="submitBtn">Опубликовать</button>
-                <button type="button" id="cancelEditBtn" class="cancel-btn" style="display: none;">Отмена</button>
-            </form>
+                <div class="profile-skills" id="skillsList"></div>
+            </div>
+
+            <div class="panel">
+                <h3>Создать объявление</h3>
+                <form id="postForm">
+                    <div class="form-group">
+                        <label>Категория</label>
+                        <select id="postCategory">
+                            <option value="Быт">Бытовые вопросы</option>
+                            <option value="Помощь">Помощь соседям</option>
+                            <option value="Услуги">Услуги / Работа</option>
+                            <option value="Спорт">Спорт / Досуг</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Заголовок</label>
+                        <input type="text" id="title" required placeholder="Название объявления">
+                    </div>
+                    <div class="form-group">
+                        <label>Текст</label>
+                        <textarea id="content" rows="4" required placeholder="Описание..."></textarea>
+                    </div>
+                    <button type="submit" class="primary-btn">Опубликовать</button>
+                </form>
+            </div>
         </div>
 
         <div class="feed-section" id="feed"></div>
@@ -204,137 +312,164 @@
 
     <script>
         const API_URL = '/api/posts';
-        let editingPostId = null; // Хранит ID редактируемого поста, если режим включен
+        let allPosts = [];
+        let currentCategory = 'Все';
 
-        // 1. ЗАГРУЗКА И СБОРКА ЛЕНТЫ
+        // 1. ЗАГРУЗКА
         async function loadPosts() {
             try {
                 const response = await fetch(API_URL);
-                if (!response.ok) throw new Error('Ошибка при загрузке');
-
-                const posts = await response.json();
-                const feed = document.getElementById('feed');
-                feed.innerHTML = '';
-
-                if (!posts || posts.length === 0) {
-                    feed.innerHTML = '<p style="color: var(--text-muted)">Объявлений пока нет.</p>';
-                    return;
-                }
-
-                posts.forEach(post => {
-                    const card = document.createElement('div');
-                    card.className = 'post-card';
-
-                    const postText = post.text || post.content || post.description || 'Текст отсутствует';
-
-                    card.innerHTML = `
-                            <div>
-                                <div class="post-title">${post.title || 'Без названия'}</div>
-                                <div class="post-content">${postText}</div>
-                            </div>
-                            <div>
-                                <div class="post-actions">
-                                    <button class="action-btn edit-btn" onclick="startEdit(${post.id}, '${escapeHtml(post.title)}', '${escapeHtml(postText)}')">Редактировать</button>
-                                    <button class="action-btn delete-btn" onclick="deletePost(${post.id})">Удалить</button>
-                                </div>
-                                <div class="post-footer">
-                                    <span>ID: ${post.id || 0}</span>
-                                </div>
-                            </div>
-                        `;
-                    feed.appendChild(card);
-                });
+                if (!response.ok) throw new Error('Ошибка сети');
+                allPosts = await response.json() || [];
+                filterPosts();
             } catch (error) {
-                console.error('Ошибка:', error);
-                document.getElementById('feed').innerHTML = '<p style="color: #ef4444">Не удалось загрузить ленту.</p>';
+                console.error(error);
+                document.getElementById('feed').innerHTML = '<p style="color:var(--danger-color)">Ошибка загрузки ленты.</p>';
             }
         }
 
-        // 2. ОТПРАВКА ИЛИ ИЗМЕНЕНИЕ ФОРМЫ
+        // 2. ФИЛЬТРАЦИЯ И ПОИСК (На клиенте в реальном времени)
+        function filterPosts() {
+            const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+            const feed = document.getElementById('feed');
+            feed.innerHTML = '';
+
+            const filtered = allPosts.filter(post => {
+                const matchesCategory = currentCategory === 'Все' || (post.category || 'Быт') === currentCategory;
+                const text = ((post.title || '') + ' ' + (post.text || post.content || '')).toLowerCase();
+                const matchesSearch = text.includes(searchQuery);
+                return matchesCategory && matchesSearch;
+            });
+
+            if (filtered.length === 0) {
+                feed.innerHTML = '<p style="color: var(--text-muted); text-align:center; padding: 20px;">Ничего не найдено.</p>';
+                return;
+            }
+
+            filtered.forEach(post => {
+                const card = document.createElement('div');
+                card.className = 'post-card';
+                const postText = post.text || post.content || 'Текст отсутствует';
+                const postCat = post.category || 'Общее';
+
+                // Рендеринг локальных или демонстрационных комментариев
+                let commentsHtml = '';
+                if (post.commentsList) {
+                    post.commentsList.forEach(c => {
+                        commentsHtml += `<div class="comment"><div class="comment-author">${c.author}</div><div>${c.text}</div></div>`;
+                    });
+                }
+
+                card.innerHTML = `
+                        <div class="post-header">
+                            <span class="post-category">${postCat}</span>
+                            <button class="del-btn" onclick="deletePost(${post.id})">Удалить</button>
+                        </div>
+                        <div class="post-title">${post.title}</div>
+                        <div class="post-content">${postText}</div>
+
+                        <div class="comments-section">
+                            <div id="comments-${post.id}">${commentsHtml}</div>
+                            <div class="comment-form">
+                                <input type="text" id="comment-in-${post.id}" placeholder="Написать комментарий...">
+                                <button onclick="addComment(${post.id})">Отправить</button>
+                            </div>
+                        </div>
+                    `;
+                feed.appendChild(card);
+            });
+        }
+
+        // 3. ДОБАВЛЕНИЕ ОБЪЯВЛЕНИЯ
         document.getElementById('postForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-
             const titleInput = document.getElementById('title');
             const contentInput = document.getElementById('content');
+            const categorySelect = document.getElementById('postCategory');
 
-            const dataToSend = {
+            const data = {
                 title: titleInput.value,
                 content: contentInput.value,
                 text: contentInput.value,
-                description: contentInput.value
+                category: categorySelect.value
             };
 
-            // Если editingPostId не равен null, шлем PUT запрос на изменение, иначе POST на создание
-            const isEditing = editingPostId !== null;
-            const url = isEditing ? `${API_URL}/${editingPostId}` : API_URL;
-            const method = isEditing ? 'PUT' : 'POST';
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                if (response.ok) {
+                    titleInput.value = '';
+                    contentInput.value = '';
+                    await loadPosts();
+                }
+            } catch (error) { console.error(error); }
+        });
+
+        // 4. ДОБАВЛЕНИЕ КОММЕНТАРИЯ
+        async function addComment(postId) {
+            const input = document.getElementById(`comment-in-${postId}`);
+            if (!input.value.trim()) return;
+
+            const author = document.getElementById('profileName').value;
+            const data = { author: author, text: input.value };
 
             try {
-                const response = await fetch(url, {
-                    method: method,
+                const response = await fetch(`${API_URL}/${postId}/comments`, {
+                    method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(dataToSend)
+                    body: JSON.stringify(data)
                 });
 
                 if (response.ok) {
-                    resetForm();
-                    await loadPosts();
-                } else {
-                    const errorText = await response.text();
-                    alert("Ошибка сервера: " + errorText);
+                    // Локально пушим для мгновенного отображения в лабораторной
+                    const post = allPosts.find(p => p.Id === postId || p.id === postId);
+                    if (post) {
+                        if (!post.commentsList) post.commentsList = [];
+                        post.commentsList.push({ author: author, text: input.value });
+                    }
+                    input.value = '';
+                    filterPosts();
                 }
-            } catch (error) {
-                console.error(error);
-                alert('Не удалось выполнить запрос.');
-            }
-        });
+            } catch (error) { console.error(error); }
+        }
 
-        // 3. УДАЛЕНИЕ ПОСТА
+        // 5. УДАЛЕНИЕ ПОСТА
         async function deletePost(id) {
-            if (!confirm('Вы уверены, что хотите удалить это объявление?')) return;
-
+            if (!confirm('Удалить объявление?')) return;
             try {
                 const response = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
-                if (response.ok) {
-                    if (editingPostId === id) resetForm();
-                    await loadPosts();
-                } else {
-                    alert('Не удалось удалить объявление.');
+                if (response.ok) await loadPosts();
+            } catch (error) { console.error(error); }
+        }
+
+        // Переключение категории сверху
+        function selectCategory(cat, btn) {
+            currentCategory = cat;
+            document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            filterPosts();
+        }
+
+        // Логика профиля
+        function saveProfile() {
+            const skillsInput = document.getElementById('profileSkills').value;
+            const container = document.getElementById('skillsList');
+            container.innerHTML = '';
+            skillsInput.split(',').forEach(s => {
+                if (s.trim()) {
+                    const b = document.createElement('span');
+                    b.className = 'skill-badge';
+                    b.innerText = s.trim();
+                    container.appendChild(b);
                 }
-            } catch (error) {
-                console.error(error);
-            }
+            });
         }
 
-        // 4. ПЕРЕКЛЮЧЕНИЕ В РЕЖИМ РЕДАКТИРОВАНИЯ
-        function startEdit(id, title, text) {
-            editingPostId = id;
-            document.getElementById('title').value = title;
-            document.getElementById('content').value = text;
-
-            document.getElementById('formTitle').innerText = 'Редактировать объявление';
-            document.getElementById('submitBtn').innerText = 'Сохранить изменения';
-            document.getElementById('cancelEditBtn').style.display = 'block';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        // Сброс формы в стандартный режим создания
-        function resetForm() {
-            editingPostId = null;
-            document.getElementById('title').value = '';
-            document.getElementById('content').value = '';
-            document.getElementById('formTitle').innerText = 'Создать объявление';
-            document.getElementById('submitBtn').innerText = 'Опубликовать';
-            document.getElementById('cancelEditBtn').style.display = 'none';
-        }
-
-        document.getElementById('cancelEditBtn').addEventListener('click', resetForm);
-
-        // Утилита для безопасного вывода строк в HTML аргументах функций
-        function escapeHtml(str) {
-            return str.replace(/'/g, "\\'").replace(/"/g, "&quot;").replace(/\n/g, " ");
-        }
-
+        // Инициализация
+        saveProfile();
         loadPosts();
     </script>
 </body>
