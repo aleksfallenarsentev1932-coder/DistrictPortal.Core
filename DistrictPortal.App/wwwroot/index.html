@@ -2,23 +2,24 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Районный Портал Взаимопомощи</title>
     <style>
         :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --accent-color: #3b82f6;
-            --danger-color: #f43f5e;
-            --text-color: #f8fafc;
-            --text-muted: #94a3b8;
+            --bg: #0f172a;
+            --card: #1e293b;
+            --accent: #3b82f6;
+            --text: #f8fafc;
+            --muted: #94a3b8;
             --input-bg: #334155;
+            --danger: #f43f5e;
+            --success: #10b981;
+            --warning: #f59e0b;
         }
 
         body {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            font-family: system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
             margin: 0;
             padding: 20px;
             display: flex;
@@ -29,47 +30,71 @@
         header {
             width: 100%;
             max-width: 1200px;
-            margin-bottom: 25px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid #334155;
             padding-bottom: 20px;
+            margin-bottom: 20px;
         }
 
-        .search-bar {
-            width: 300px;
-            position: relative;
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
 
-            .search-bar input {
-                width: 100%;
-                padding: 10px 15px;
-                background-color: var(--card-bg);
-                border: 1px solid #334155;
-                border-radius: 8px;
+        .search-bar input {
+            padding: 10px;
+            background: var(--card);
+            border: 1px solid #334155;
+            border-radius: 8px;
+            color: #fff;
+            width: 250px;
+        }
+
+        .categories-tags {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .tag-btn {
+            background: var(--card);
+            color: var(--muted);
+            border: 1px solid #334155;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+            .tag-btn.active, .tag-btn:hover {
+                background: var(--accent);
                 color: #fff;
-                box-sizing: border-box;
+                border-color: var(--accent);
             }
 
         .main-layout {
             display: flex;
-            gap: 25px;
-            max-width: 1200px;
+            gap: 20px;
             width: 100%;
+            max-width: 1200px;
             align-items: flex-start;
         }
 
         .sidebar {
+            width: 300px;
             display: flex;
             flex-direction: column;
             gap: 20px;
-            width: 300px;
             flex-shrink: 0;
         }
 
         .panel {
-            background-color: var(--card-bg);
+            background: var(--card);
             padding: 20px;
             border-radius: 12px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
@@ -83,62 +108,48 @@
                 padding-bottom: 8px;
             }
 
-        .categories-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 20px;
-            width: 100%;
-            max-width: 1200px;
-        }
-
-        .tag-btn {
-            background-color: var(--card-bg);
-            color: var(--text-muted);
-            border: 1px solid #334155;
-            padding: 8px 16px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.2s;
-        }
-
-            .tag-btn.active, .tag-btn:hover {
-                background-color: var(--accent-color);
-                color: #fff;
-                border-color: var(--accent-color);
-            }
-
         .form-group {
             margin-bottom: 12px;
         }
 
         label {
             display: block;
-            margin-bottom: 4px;
             font-size: 13px;
-            color: var(--text-muted);
+            color: var(--muted);
+            margin-bottom: 4px;
         }
 
         input, textarea, select {
             width: 100%;
             padding: 10px;
-            background-color: var(--input-bg);
+            background: var(--input-bg);
             border: 1px solid #475569;
             border-radius: 6px;
             color: #fff;
             box-sizing: border-box;
         }
 
-        button.primary-btn {
+        .primary-btn {
             width: 100%;
             padding: 10px;
-            background-color: var(--accent-color);
+            background: var(--accent);
             color: #fff;
             border: none;
             border-radius: 6px;
-            font-weight: bold;
             cursor: pointer;
+            font-weight: bold;
+        }
+
+        .secondary-btn {
+            width: 100%;
+            padding: 8px;
+            background: #475569;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 5px;
+            font-size: 12px;
         }
 
         .profile-skills {
@@ -153,9 +164,10 @@
             padding: 3px 8px;
             border-radius: 4px;
             font-size: 12px;
+            color: #fff;
         }
 
-        .feed-section {
+        .feed {
             flex-grow: 1;
             display: flex;
             flex-direction: column;
@@ -163,36 +175,80 @@
         }
 
         .post-card {
-            background-color: var(--card-bg);
-            border-radius: 12px;
+            background: var(--card);
             padding: 20px;
+            border-radius: 12px;
+            position: relative;
         }
+
+            .post-card.banned {
+                border: 2px solid var(--danger);
+                background: #1e1b22;
+            }
 
         .post-header {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
+            align-items: center;
         }
 
-        .post-category {
-            background-color: #334155;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            color: var(--accent-color);
+        .post-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .post-cat {
+            color: #fff;
+            font-size: 11px;
             font-weight: bold;
+            text-transform: uppercase;
+            background: var(--accent);
+            padding: 3px 10px;
+            border-radius: 20px;
         }
 
         .post-title {
             font-size: 18px;
             font-weight: bold;
-            margin: 8px 0;
+            margin: 10px 0;
         }
 
-        .post-content {
+        .post-body {
             font-size: 14px;
             color: #cbd5e1;
             margin-bottom: 15px;
+        }
+
+        .report-btn {
+            background: none;
+            border: none;
+            color: var(--warning);
+            cursor: pointer;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 0;
+        }
+
+        .del-btn {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            font-size: 13px;
+            padding: 0;
+        }
+
+        .approve-btn {
+            background: none;
+            border: none;
+            color: var(--success);
+            cursor: pointer;
+            font-size: 13px;
+            padding: 0;
+            font-weight: bold;
         }
 
         .comments-section {
@@ -203,8 +259,8 @@
 
         .comment {
             background-color: #1e293b;
-            border-left: 3px solid var(--accent-color);
-            padding: 6px 10px;
+            border-left: 3px solid var(--accent);
+            padding: 8px 12px;
             margin-bottom: 8px;
             border-radius: 0 6px 6px 0;
             font-size: 13px;
@@ -224,7 +280,7 @@
 
             .comment-form input {
                 flex-grow: 1;
-                padding: 6px 10px;
+                padding: 8px;
                 font-size: 13px;
             }
 
@@ -238,223 +294,567 @@
                 font-size: 13px;
             }
 
-        .del-btn {
+        .reply-btn {
+            color: var(--accent);
+            font-size: 11px;
+            padding: 0;
+            margin-top: 4px;
+            font-weight: bold;
             background: none;
             border: none;
-            color: var(--danger-color);
             cursor: pointer;
-            font-size: 13px;
+        }
+
+        .mention {
+            color: #60a5fa;
+            font-weight: bold;
+            margin-right: 4px;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.85);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: var(--card);
+            padding: 30px;
+            border-radius: 16px;
+            border: 1px solid #334155;
+            width: 360px;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: var(--muted);
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .auth-warn {
+            background: #7f1d1d;
+            color: #fca5a5;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .complaints-badge {
+            font-size: 11px;
+            background: #7f1d1d;
+            color: #fca5a5;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 5px;
+        }
+
+        .admin-badge {
+            background: var(--danger);
+            color: #fff;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 4px 10px;
+            border-radius: 6px;
+            display: none;
+        }
+
+        .toggle-switch {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #334155;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 15px;
         }
     </style>
 </head>
 <body>
 
+    <div class="modal-overlay" id="authModal" style="display: none;">
+        <div class="modal-content">
+            <h2 style="margin-top:0; font-size:20px; text-align:center;">Вход на портал</h2>
+            <div class="auth-warn">Без авторизации по номеру телефона просмотр и отправка сообщений недоступны!</div>
+            <div id="phoneStep">
+                <div class="form-group">
+                    <label>Номер телефона</label>
+                    <input type="text" id="authPhone" placeholder="+7 (999) 123-45-67" value="+7">
+                </div>
+                <button class="primary-btn" onclick="sendSmsCode()">Получить SMS-код</button>
+            </div>
+            <div id="codeStep" style="display: none;">
+                <div class="form-group">
+                    <label>Код из SMS (см. консоль VS)</label>
+                    <input type="text" id="authCode" placeholder="0000">
+                </div>
+                <button class="primary-btn" onclick="verifySmsCode()">Подтвердить вход</button>
+                <button class="secondary-btn" onclick="backToPhone()">Назад</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="profileModal" style="display: none;">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeProfileModal()">&times;</button>
+            <h2 style="margin-top:0; font-size:20px; text-align:center; margin-bottom:20px;">Мой профиль помощи</h2>
+            <div class="form-group">
+                <label>Имя соседа (для подписи)</label>
+                <input type="text" id="profileName" value="София И." onchange="saveProfile()">
+            </div>
+            <div class="form-group">
+                <label>Мои навыки (через запятую)</label>
+                <input type="text" id="profileSkills" value="Разработка сайтов, C#, Базы данных" onchange="saveProfile()">
+            </div>
+            <div class="form-group">
+                <label>Привязанные навыки:</label>
+                <div class="profile-skills" id="skillsList" style="margin-top: 5px;"></div>
+            </div>
+
+            <div class="toggle-switch">
+                <span style="font-size: 13px; font-weight: bold; color: var(--text);">Режим администратора</span>
+                <input type="checkbox" id="adminToggle" style="width: auto; cursor: pointer;" onchange="toggleAdminMode()">
+            </div>
+
+            <div style="margin-top: 25px; border-top: 1px solid #334155; padding-top: 15px;">
+                <button class="secondary-btn" style="background:var(--danger); width:100%; margin:0;" onclick="logout()">Выйти из аккаунта</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="reportModal" style="display: none;">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeReportModal()">&times;</button>
+            <h2 style="margin-top:0; font-size:18px; text-align:center; margin-bottom:15px;">Пожаловаться на объявление</h2>
+            <input type="hidden" id="reportPostId">
+            <div class="form-group">
+                <label>Выберите причину жалобы</label>
+                <select id="reportReason">
+                    <option value="spam">Спам / Реклама</option>
+                    <option value="insult">Оскорбление участников</option>
+                    <option value="bad-words">Нецензурная лексика</option>
+                    <option value="other">Другое нарушение</option>
+                </select>
+            </div>
+            <button class="primary-btn" style="background: var(--danger);" onclick="submitReport()">Отправить жалобу</button>
+        </div>
+    </div>
+
     <header>
         <div>
-            <h1 style="margin: 0; font-size: 24px;">Районный Портал</h1>
-            <p style="color: var(--text-muted); margin: 3px 0 0 0; font-size: 14px;">Взаимопомощь, услуги и общение</p>
+            <h1 style="margin: 0; font-size: 24px; display: flex; align-items: center; gap: 10px;">
+                Районный Портал <span class="admin-badge" id="adminHeaderBadge">ADMIN</span>
+            </h1>
+            <p style="color: var(--muted); margin: 3px 0 0 0; font-size: 14px;">Взаимопомощь и общение</p>
         </div>
-        <div class="search-bar">
-            <input type="text" id="searchInput" placeholder="Поиск объявлений..." oninput="filterPosts()">
+        <div class="header-right">
+            <div class="search-bar"><input type="text" id="searchInput" placeholder="Поиск объявлений..." oninput="filterPosts()"></div>
+            <button class="tag-btn active" style="border-radius:8px;" onclick="openProfileModal()">Мой профиль</button>
         </div>
     </header>
 
-    <div class="categories-tags">
-        <button class="tag-btn active" onclick="selectCategory('Все', this)">Все объявления</button>
-        <button class="tag-btn" onclick="selectCategory('Быт', this)">Бытовые вопросы</button>
-        <button class="tag-btn" onclick="selectCategory('Помощь', this)">Помощь соседям</button>
-        <button class="tag-btn" onclick="selectCategory('Услуги', this)">Услуги / Работа</button>
-        <button class="tag-btn" onclick="selectCategory('Спорт', this)">Спорт / Досуг</button>
+    <div class="categories-tags" id="filterContainer">
+        <button class="tag-btn active" onclick="setFilter('Все', this)">Все объявления</button>
+        <button class="tag-btn" onclick="setFilter('News', this)">Бытовые вопросы</button>
+        <button class="tag-btn" onclick="setFilter('Help', this)">Помощь соседям</button>
+        <button class="tag-btn" onclick="setFilter('Services', this)">Услуги / Работа</button>
+        <button class="tag-btn" onclick="setFilter('Sport', this)">Спорт / Досуг</button>
     </div>
 
     <div class="main-layout">
         <div class="sidebar">
             <div class="panel">
-                <h3>Мой профиль помощи</h3>
-                <div class="form-group">
-                    <label>Имя соседа</label>
-                    <input type="text" id="profileName" value="София И." onchange="saveProfile()">
-                </div>
-                <div class="form-group">
-                    <label>Мои навыки (через запятую)</label>
-                    <input type="text" id="profileSkills" value="Разработка сайтов, C#, Базы данных" onchange="saveProfile()">
-                </div>
-                <div class="profile-skills" id="skillsList"></div>
-            </div>
-
-            <div class="panel">
-                <h3>Создать объявление</h3>
+                <h3>Новое объявление</h3>
                 <form id="postForm">
                     <div class="form-group">
                         <label>Категория</label>
                         <select id="postCategory">
-                            <option value="Быт">Бытовые вопросы</option>
-                            <option value="Помощь">Помощь соседям</option>
-                            <option value="Услуги">Услуги / Работа</option>
-                            <option value="Спорт">Спорт / Досуг</option>
+                            <option value="News">Бытовые вопросы</option>
+                            <option value="Help">Помощь соседям</option>
+                            <option value="Services">Услуги / Работа</option>
+                            <option value="Sport">Спорт / Досуг</option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label>Заголовок</label>
-                        <input type="text" id="title" required placeholder="Название объявления">
-                    </div>
-                    <div class="form-group">
-                        <label>Текст</label>
-                        <textarea id="content" rows="4" required placeholder="Описание..."></textarea>
-                    </div>
+                    <div class="form-group"><label>Заголовок</label><input type="text" id="title" required placeholder="Название объявления"></div>
+                    <div class="form-group"><label>Описание</label><textarea id="content" rows="4" required placeholder="Описание..."></textarea></div>
                     <button type="submit" class="primary-btn">Опубликовать</button>
                 </form>
             </div>
         </div>
-
-        <div class="feed-section" id="feed"></div>
+        <div class="feed" id="feed"></div>
     </div>
 
     <script>
-        const API_URL = '/api/posts';
+        const API = '/api/posts';
         let allPosts = [];
-        let currentCategory = 'Все';
+        let currentFilter = 'Все';
+        let isAdminMode = false;
+        const catMap = { 'News': 'Быт', 'Help': 'Помощь', 'Services': 'Услуги', 'Sport': 'Спорт' };
 
-        // 1. ЗАГРУЗКА
-        async function loadPosts() {
+        function openProfileModal() { document.getElementById('profileModal').style.display = 'flex'; }
+        function closeProfileModal() { document.getElementById('profileModal').style.display = 'none'; }
+        
+        function openReportModal(postId) {
+            document.getElementById('reportPostId').value = postId;
+            document.getElementById('reportModal').style.display = 'flex';
+        }
+        function closeReportModal() { document.getElementById('reportModal').style.display = 'none'; }
+
+        function toggleAdminMode() {
+            isAdminMode = document.getElementById('adminToggle').checked;
+            localStorage.setItem('isAdmin', isAdminMode);
+
+            const badge = document.getElementById('adminHeaderBadge');
+            badge.style.display = isAdminMode ? 'inline-block' : 'none';
+
+            filterPosts();
+        }
+
+        async function submitReport() {
+            const id = document.getElementById('reportPostId').value;
             try {
-                const response = await fetch(API_URL);
-                if (!response.ok) throw new Error('Ошибка сети');
-                allPosts = await response.json() || [];
-                filterPosts();
-            } catch (error) {
-                console.error(error);
-                document.getElementById('feed').innerHTML = '<p style="color:var(--danger-color)">Ошибка загрузки ленты.</p>';
+               
+                const response = await fetch(`/api/posts/${id}/report`, { method: 'POST' });
+                if (response.ok) {
+                    alert('Жалоба принята. Спасибо за бдительность!');
+                    closeReportModal();
+                    
+                    allPosts = await response.json() || [];
+                    filterPosts();
+                } else {
+                    alert('Не удалось отправить жалобу.');
+                }
+            } catch (e) { console.error(e); }
+        }
+
+        async function approvePost(postId) {
+            if (confirm('Вы уверены, что хотите разблокировать это объявление и сбросить все жалобы?')) {
+                try {
+                    
+                    const response = await fetch(`/api/posts/${postId}/unlock`, { method: 'POST' });
+                    if (response.ok) {
+                        alert('Объявление успешно разблокировано и возвращено в общую ленту!');
+                        
+                        allPosts = await response.json() || [];
+                        filterPosts(); 
+                    } else {
+                        alert('Ошибка сервера при разблокировке.');
+                    }
+                } catch (e) {
+                    console.error(e);
+                }
             }
         }
 
-        // 2. ФИЛЬТРАЦИЯ И ПОИСК (На клиенте в реальном времени)
-        function filterPosts() {
-            const searchQuery = document.getElementById('searchInput').value.toLowerCase();
-            const feed = document.getElementById('feed');
-            feed.innerHTML = '';
+        function checkAuth() {
+            const userPhone = localStorage.getItem('userPhone');
+            if (!userPhone) {
+                document.getElementById('authModal').style.display = 'flex';
+                document.getElementById('profileModal').style.display = 'none';
+            } else {
+                document.getElementById('authModal').style.display = 'none';
+                const savedName = localStorage.getItem('userName');
+                if (savedName) document.getElementById('profileName').value = savedName;
 
-            const filtered = allPosts.filter(post => {
-                const matchesCategory = currentCategory === 'Все' || (post.category || 'Быт') === currentCategory;
-                const text = ((post.title || '') + ' ' + (post.text || post.content || '')).toLowerCase();
-                const matchesSearch = text.includes(searchQuery);
-                return matchesCategory && matchesSearch;
+                // Восстанавливаем состояние админки
+                isAdminMode = localStorage.getItem('isAdmin') === 'true';
+                document.getElementById('adminToggle').checked = isAdminMode;
+                document.getElementById('adminHeaderBadge').style.display = isAdminMode ? 'inline-block' : 'none';
+
+                saveProfile();
+                load();
+            }
+        }
+
+        async function sendSmsCode() {
+            const phone = document.getElementById('authPhone').value.trim();
+            if (phone.length < 10) return alert('Введите корректный номер!');
+            try {
+                const res = await fetch('/api/auth/send-code', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phoneNumber: phone })
+                });
+                if (res.ok) {
+                    document.getElementById('phoneStep').style.display = 'none';
+                    document.getElementById('codeStep').style.display = 'block';
+                } else { alert('Ошибка отправки кода'); }
+            } catch (e) { console.error(e); }
+        }
+
+        async function verifySmsCode() {
+            const phone = document.getElementById('authPhone').value.trim();
+            const code = document.getElementById('authCode').value.trim();
+            try {
+                const res = await fetch('/api/auth/verify-code', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phoneNumber: phone, code: code })
+                });
+                if (res.ok) {
+                    localStorage.setItem('userPhone', phone);
+                    document.getElementById('authCode').value = '';
+                    document.getElementById('phoneStep').style.display = 'block';
+                    document.getElementById('codeStep').style.display = 'none';
+                    checkAuth();
+                } else { alert('Неверный код доступа!'); }
+            } catch (e) { console.error(e); }
+        }
+
+        function backToPhone() {
+            document.getElementById('phoneStep').style.display = 'block';
+            document.getElementById('codeStep').style.display = 'none';
+        }
+
+        function logout() {
+            localStorage.removeItem('userPhone');
+            localStorage.removeItem('userName');
+            localStorage.removeItem('isAdmin');
+            location.reload();
+        }
+
+        async function load() {
+            try {
+                const r = await fetch(API);
+                allPosts = await r.json() || [];
+                filterPosts();
+            } catch (e) {
+                console.error(e);
+                document.getElementById('feed').innerHTML = '<p style="color:var(--danger)">Ошибка загрузки ленты.</p>';
+            }
+        }
+
+        function filterPosts() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const container = document.getElementById('feed');
+            container.innerHTML = '';
+
+            const filtered = allPosts.filter(p => {
+                const complaints = p.complaintsCount || p.ComplaintsCount || 0;
+
+                // Если режим АДМИНА — пропускаем даже заблокированные посты!
+                if (!isAdminMode && complaints >= 3) return false;
+
+                const titleText = p.title || '';
+                const descText = p.description || p.content || p.text || '';
+                const fullText = (titleText + ' ' + descText).toLowerCase();
+
+                const postCat = p.category || 'News';
+                const matchesCat = currentFilter === 'Все' || postCat === currentFilter;
+                const matchesSearch = fullText.includes(search);
+
+                p.cleanCategory = postCat;
+                p.cleanDescription = descText;
+                p.cleanComplaints = complaints;
+                return matchesCat && matchesSearch;
             });
 
             if (filtered.length === 0) {
-                feed.innerHTML = '<p style="color: var(--text-muted); text-align:center; padding: 20px;">Ничего не найдено.</p>';
+                container.innerHTML = '<p style="color: var(--muted); text-align:center; padding: 20px;">В этой категории пока нет объявлений.</p>';
                 return;
             }
 
-            filtered.forEach(post => {
-                const card = document.createElement('div');
-                card.className = 'post-card';
-                const postText = post.text || post.content || 'Текст отсутствует';
-                const postCat = post.category || 'Общее';
+            filtered.forEach(p => {
+                const div = document.createElement('div');
+                const isBanned = p.cleanComplaints >= 3;
+                div.className = `post-card ${isBanned ? 'banned' : ''}`;
 
-                // Рендеринг локальных или демонстрационных комментариев
                 let commentsHtml = '';
-                if (post.commentsList) {
-                    post.commentsList.forEach(c => {
-                        commentsHtml += `<div class="comment"><div class="comment-author">${c.author}</div><div>${c.text}</div></div>`;
+                if (p.commentsList) {
+                    p.commentsList.forEach(c => {
+                        const mainAuthor = c.author || c.Author || 'Сосед';
+                        const mainText = c.text || c.Text || '';
+                        const mainId = c.id || c.Id;
+
+                        commentsHtml += `
+                                <div class="comment" style="margin-bottom: 12px; background: #1e293b;">
+                                    <div class="comment-author">${mainAuthor}</div>
+                                    <div>${mainText}</div>
+                                    <button class="reply-btn" onclick="openReplyField('${mainId}', '${mainId}', '${mainAuthor}')">Ответить</button>
+                                    <div id="reply-form-${mainId}" class="comment-form" style="display:none; margin-top:8px; padding-left:10px;">
+                                        <input type="text" id="reply-in-${mainId}" placeholder="Ответить соседу...">
+                                        <button id="reply-btn-submit-${mainId}">ОК</button>
+                                    </div>
+                            `;
+
+                        const replies = c.replies || c.Replies;
+                        if (replies && replies.length > 0) {
+                            replies.forEach(r => {
+                                const subAuthor = r.author || r.Author || 'Сосед';
+                                const subText = r.text || r.Text || '';
+                                let formattedText = subText;
+                                if (subText.startsWith('[')) {
+                                    const closeBracket = subText.indexOf(']');
+                                    if (closeBracket > 0) {
+                                        const nameToken = subText.substring(1, closeBracket);
+                                        const restText = subText.substring(closeBracket + 1);
+                                        formattedText = `<span class="mention">@${nameToken}</span>${restText}`;
+                                    }
+                                }
+                                commentsHtml += `
+                                        <div class="comment" style="margin-left: 20px; margin-top: 6px; background: #2d3748; border-left: 2px solid var(--muted);">
+                                            <div class="comment-author" style="color: var(--muted); font-size:12px;">${subAuthor}</div>
+                                            <div style="font-size:12px;">${formattedText}</div>
+                                            <button class="reply-btn" style="color: var(--muted);" onclick="openReplyField('${mainId}', '${r.id || r.Id}', '${subAuthor}')">Ответить</button>
+                                        </div>
+                                    `;
+                            });
+                        }
+                        commentsHtml += `</div>`;
                     });
                 }
 
-                card.innerHTML = `
+                const compBadge = p.cleanComplaints > 0 ? `<span class="complaints-badge">Жалоб: ${p.cleanComplaints}</span>` : '';
+                const banTitlePrefix = isBanned ? `<span style="color:var(--danger); font-weight:bold; margin-right:10px;">[БЛОК]</span>` : '';
+
+                // Кнопки действий меняются в зависимости от роли администратора
+                let actionButtons = `<button class="report-btn" onclick="openReportModal(${p.id})">🚩 Пожаловаться</button>`;
+                if (isAdminMode) {
+                    actionButtons = `
+                            ${isBanned ? `<button class="approve-btn" onclick="approvePost(${p.id})">✅ Разблокировать</button>` : ''}
+                            <button class="del-btn" onclick="del(${p.id})">🗑️ Удалить навсегда</button>
+                        `;
+                }
+
+                div.innerHTML = `
                         <div class="post-header">
-                            <span class="post-category">${postCat}</span>
-                            <button class="del-btn" onclick="deletePost(${post.id})">Удалить</button>
+                            <div>
+                                <span class="post-cat">${catMap[p.cleanCategory] || 'Общее'}</span>
+                                ${compBadge}
+                            </div>
+                            <div class="post-actions">
+                                ${actionButtons}
+                            </div>
                         </div>
-                        <div class="post-title">${post.title}</div>
-                        <div class="post-content">${postText}</div>
+                        <div class="post-title">${banTitlePrefix}${p.title}</div>
+                        <div class="post-body">${p.cleanDescription}</div>
 
                         <div class="comments-section">
-                            <div id="comments-${post.id}">${commentsHtml}</div>
+                            <div id="comments-${p.id}">${commentsHtml}</div>
                             <div class="comment-form">
-                                <input type="text" id="comment-in-${post.id}" placeholder="Написать комментарий...">
-                                <button onclick="addComment(${post.id})">Отправить</button>
+                                <input type="text" id="comment-in-${p.id}" placeholder="Написать комментарий к посту...">
+                                <button onclick="addComment(${p.id}, '')">Отправить</button>
                             </div>
                         </div>
                     `;
-                feed.appendChild(card);
+                container.appendChild(div);
             });
         }
 
-        // 3. ДОБАВЛЕНИЕ ОБЪЯВЛЕНИЯ
-        document.getElementById('postForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const titleInput = document.getElementById('title');
-            const contentInput = document.getElementById('content');
-            const categorySelect = document.getElementById('postCategory');
-
-            const data = {
-                title: titleInput.value,
-                content: contentInput.value,
-                text: contentInput.value,
-                category: categorySelect.value
-            };
-
-            try {
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                });
-                if (response.ok) {
-                    titleInput.value = '';
-                    contentInput.value = '';
-                    await loadPosts();
-                }
-            } catch (error) { console.error(error); }
-        });
-
-        // 4. ДОБАВЛЕНИЕ КОММЕНТАРИЯ
-        async function addComment(postId) {
-            const input = document.getElementById(`comment-in-${postId}`);
-            if (!input.value.trim()) return;
-
-            const author = document.getElementById('profileName').value;
-            const data = { author: author, text: input.value };
-
-            try {
-                const response = await fetch(`${API_URL}/${postId}/comments`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                });
-
-                if (response.ok) {
-                    // Локально пушим для мгновенного отображения в лабораторной
-                    const post = allPosts.find(p => p.Id === postId || p.id === postId);
-                    if (post) {
-                        if (!post.commentsList) post.commentsList = [];
-                        post.commentsList.push({ author: author, text: input.value });
-                    }
-                    input.value = '';
-                    filterPosts();
-                }
-            } catch (error) { console.error(error); }
-        }
-
-        // 5. УДАЛЕНИЕ ПОСТА
-        async function deletePost(id) {
-            if (!confirm('Удалить объявление?')) return;
-            try {
-                const response = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
-                if (response.ok) await loadPosts();
-            } catch (error) { console.error(error); }
-        }
-
-        // Переключение категории сверху
-        function selectCategory(cat, btn) {
-            currentCategory = cat;
+        function setFilter(cat, btn) {
+            currentFilter = cat;
             document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             filterPosts();
         }
 
-        // Логика профиля
+        document.getElementById('postForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = {
+                title: document.getElementById('title').value,
+                content: document.getElementById('content').value,
+                category: document.getElementById('postCategory').value
+            };
+            try {
+                const response = await fetch(API, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                if (response.ok) {
+                    allPosts = await response.json() || [];
+                    document.getElementById('postForm').reset();
+                    filterPosts();
+                }
+            } catch (e) { console.error(e); }
+        });
+
+        function openReplyField(rootCommentId, targetCommentId, targetAuthorName) {
+            const form = document.getElementById(`reply-form-${rootCommentId}`);
+            const input = document.getElementById(`reply-in-${rootCommentId}`);
+            const submitBtn = document.getElementById(`reply-btn-submit-${rootCommentId}`);
+            if (form.style.display === 'flex' && input.dataset.targetId === targetCommentId) {
+                form.style.display = 'none';
+                return;
+            }
+            form.style.display = 'flex';
+            input.value = `[${targetAuthorName}] `;
+            input.focus();
+            input.dataset.targetId = targetCommentId;
+            submitBtn.onclick = () => addCommentByForm(rootCommentId);
+        }
+
+        async function addCommentByForm(rootCommentId) {
+            const post = allPosts.find(p => p.commentsList && p.commentsList.some(c => c.id === rootCommentId));
+            if (!post) return;
+            const input = document.getElementById(`reply-in-${rootCommentId}`);
+            if (!input.value.trim()) return;
+            const author = document.getElementById('profileName').value;
+            const data = { author: author, text: input.value, parentCommentId: rootCommentId };
+            try {
+                const response = await fetch(`${API}/${post.id}/comments`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                if (response.ok) {
+                    allPosts = await response.json() || [];
+                    input.value = '';
+                    document.getElementById(`reply-form-${rootCommentId}`).style.display = 'none';
+                    filterPosts();
+                }
+            } catch (e) { console.error(e); }
+        }
+
+        async function addComment(postId, parentCommentId = '') {
+            const input = document.getElementById('comment-in-' + postId);
+            if (!input || !input.value.trim()) return;
+            const author = document.getElementById('profileName').value;
+            const data = { author: author, text: input.value, parentCommentId: parentCommentId };
+            try {
+                const response = await fetch(`${API}/${postId}/comments`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                if (response.ok) {
+                    allPosts = await response.json() || [];
+                    input.value = '';
+                    filterPosts();
+                }
+            } catch (e) { console.error(e); }
+        }
+
+        async function del(id) {
+            if (confirm('Удалить объявление окончательно?')) {
+                try {
+                    const response = await fetch(`${API}/${id}`, { method: 'DELETE' });
+                    if (response.ok) {
+                        allPosts = await response.json() || [];
+                        filterPosts();
+                    }
+                } catch (e) { console.error(e); }
+            }
+        }
+
         function saveProfile() {
+            const nameInput = document.getElementById('profileName').value;
+            localStorage.setItem('userName', nameInput);
             const skillsInput = document.getElementById('profileSkills').value;
             const container = document.getElementById('skillsList');
             container.innerHTML = '';
@@ -468,9 +868,7 @@
             });
         }
 
-        // Инициализация
-        saveProfile();
-        loadPosts();
+        checkAuth();
     </script>
 </body>
 </html>

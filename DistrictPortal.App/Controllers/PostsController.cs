@@ -25,7 +25,7 @@ namespace DistrictPortal.App.Controllers
             try
             {
                 var posts = await _firebaseStorage.LoadAsync() ?? new List<Post>();
-                return Ok(posts);
+                return Ok(MapPostsToDto(posts));
             }
             catch (Exception ex)
             {
@@ -37,46 +37,135 @@ namespace DistrictPortal.App.Controllers
         public async Task<IActionResult> CreatePost([FromBody] PostDetailDto dto)
         {
             if (dto == null || string.IsNullOrEmpty(dto.Title))
-            {
-                return BadRequest(new { error = "Заголовок не может быть пустым." });
-            }
+                return BadRequest(new { error = "Заголовок пуст" });
 
             try
             {
                 var currentPosts = await _firebaseStorage.LoadAsync() ?? new List<Post>();
 
+                if (!Enum.TryParse(dto.Category, true, out PostCategory parsedCat))
+                {
+                    parsedCat = PostCategory.News;
+                }
+
                 var newPost = new Post
                 {
                     Id = Math.Abs(Guid.NewGuid().GetHashCode()),
-                    Title = dto.Title
+                    Title = dto.Title,
+                    Description = dto.Content,
+                    Category = parsedCat,
+                    CommentsList = new List<Comment>(),
+                    ComplaintsCount = 0
                 };
-
-                var textProperty = typeof(Post).GetProperties()
-                    .FirstOrDefault(p => p.Name == "Text" || p.Name == "Content" || p.Name == "Description");
-
-                if (textProperty != null)
-                {
-                    textProperty.SetValue(newPost, dto.Content);
-                }
 
                 currentPosts.Add(newPost);
                 await _firebaseStorage.SaveAllAsync(currentPosts);
 
-                return Ok(newPost);
+                return Ok(MapPostsToDto(currentPosts));
             }
             catch (Exception ex)
             {
-                return BadRequest(new { error = $"Ошибка базы данных: {ex.Message}" });
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
+        [HttpPost("{id:int}/report")]
+        public async Task<IActionResult> ReportPost(int id)
+        {
+            try
+            {
+                var posts = await _firebaseStorage.LoadAsync() ?? new List<Post>();
+                var post = posts.FirstOrDefault(p => p.Id == id);
+
+                if (post == null)
+                    return NotFound(new { error = "Пост не найден" });
+
+                post.ComplaintsCount++;
+
+                await _firebaseStorage.SaveAllAsync(posts);
+                return Ok(MapPostsToDto(posts));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
+        [HttpPost("{id:int}/unlock")]
+        public async Task<IActionResult> UnlockPost(int id)
+        {
+            try
+            {
+                var posts = await _firebaseStorage.LoadAsync() ?? new List<Post>();
+                var post = posts.FirstOrDefault(p => p.Id == id);
+
+                if (post == null)
+                    return NotFound(new { error = "Объявление не найдено" });
+
+                post.ComplaintsCount = 0;
+
+                await _firebaseStorage.SaveAllAsync(posts);
+                return Ok(MapPostsToDto(posts));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
             }
         }
 
         [HttpPost("{id:int}/comments")]
-        public async Task<IActionResult> AddComment(int id, [FromBody] CommentDto comment)
+        public async Task<IActionResult> AddComment(int id, [FromBody] CommentDto dto)
         {
-            if (comment == null || string.IsNullOrEmpty(comment.Text))
+            if (dto == null || string.IsNullOrEmpty(dto.Text))
                 return BadRequest(new { error = "Текст комментария пуст." });
 
-            return Ok(new { author = comment.Author ?? "Сосед", text = comment.Text, date = DateTime.Now.ToString("dd.MM.yyyy HH:mm") });
+            try
+            {
+                var currentPosts = await _firebaseStorage.LoadAsync() ?? new List<Post>();
+                var post = currentPosts.FirstOrDefault(p => p.Id == id);
+
+                if (post == null)
+                    return NotFound(new { error = "Пост не найден." });
+
+                if (post.CommentsList == null)
+                    post.CommentsList = new List<Comment>();
+
+                var newComment = new Comment
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Author = string.IsNullOrEmpty(dto.Author) ? "Сосед" : dto.Author,
+                    Text = dto.Text,
+                    CreatedAt = DateTime.Now,
+                    Replies = new List<Comment>()
+                };
+
+                if (!string.IsNullOrEmpty(dto.ParentCommentId))
+                {
+                    var rootComment = post.CommentsList.FirstOrDefault(c =>
+                        c.Id == dto.ParentCommentId ||
+                        (c.Replies != null && c.Replies.Any(r => r.Id == dto.ParentCommentId))
+                    );
+
+                    if (rootComment == null)
+                        return NotFound(new { error = "Тред для комментария не найден." });
+
+                    if (rootComment.Replies == null)
+                        rootComment.Replies = new List<Comment>();
+
+                    rootComment.Replies.Add(newComment);
+                }
+                else
+                {
+                    post.CommentsList.Add(newComment);
+                }
+
+                await _firebaseStorage.SaveAllAsync(currentPosts);
+                return Ok(MapPostsToDto(currentPosts));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
         }
 
         [HttpDelete("{id:int}")]
@@ -86,21 +175,26 @@ namespace DistrictPortal.App.Controllers
             {
                 var currentPosts = await _firebaseStorage.LoadAsync() ?? new List<Post>();
                 var target = currentPosts.FirstOrDefault(p => p.Id == id);
-
-                if (target == null)
-                {
-                    return NotFound(new { error = "Пост не найден." });
-                }
+                if (target == null) return NotFound();
 
                 currentPosts.Remove(target);
                 await _firebaseStorage.SaveAllAsync(currentPosts);
 
-                return Ok(new { message = "Успешно удалено" });
+                return Ok(MapPostsToDto(currentPosts));
             }
-            catch (Exception ex)
-            {
-                return BadRequest(new { error = ex.Message });
-            }
+            catch (Exception ex) { return BadRequest(new { error = ex.Message }); }
+        }
+
+        private List<object> MapPostsToDto(List<Post> posts)
+        {
+            return posts.Select(p => new {
+                id = p.Id,
+                title = p.Title,
+                description = p.Description,
+                category = p.Category.ToString(),
+                complaintsCount = p.ComplaintsCount,
+                commentsList = p.CommentsList ?? new List<Comment>()
+            }).ToList<object>();
         }
     }
 
@@ -115,5 +209,6 @@ namespace DistrictPortal.App.Controllers
     {
         public string Author { get; set; } = string.Empty;
         public string Text { get; set; } = string.Empty;
+        public string ParentCommentId { get; set; } = string.Empty;
     }
 }
